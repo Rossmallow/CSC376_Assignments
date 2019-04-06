@@ -1,5 +1,7 @@
 # Ross Nelsson CSC 376 Assignment 1: Program Input
-import sys # Import sys 
+# April 9th 2019
+
+import sys # Import sys module
 
 # Echo standard input
 print ("Standard Input:") # Prints 'Standard Input:'
