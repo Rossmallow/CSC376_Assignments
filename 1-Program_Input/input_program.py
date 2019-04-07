@@ -1,4 +1,4 @@
-# Ross Nelsson CSC 376 Assignment 1: Program Input
+# Ross Nelson CSC376 Assignment 1: Program Input
 # April 9th 2019
 
 import sys # Import sys module
@@ -11,11 +11,10 @@ while text: # Loop while 'text' has a value
 	text = sys.stdin.readline().replace("\n", "") # Saves standard input to 'text' without the newline character
 
 # Get the command line arguments
-options = ["", "", False] # Instantiate options array
+options = ["", "", False] # Initialize options array
 
 arguments = sys.argv # Store command line arguments in 'arguments'
-#print (arguments) # Print contents of 'arguments'
-i = 1 # Instantiate i to 1 because the 0th argument can be ignored
+i = 1 # Initialize i to 1 because the 0th argument can be ignored
 while i < len(arguments): # Loop until the end of the array
 	if (arguments[i] == "-o"): # Check for option 1
 		options[0] = arguments[i + 1] # Set the 0th index of 'options' to be the command line argument following '-o'
