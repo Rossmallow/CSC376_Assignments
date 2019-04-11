@@ -4,23 +4,32 @@
 
 import sys # Import sys module
 import socket # Import socket module
+import send # Import custom send module located in send.py
 
 # Displays how to open the program
 def usage (script_name): # Creates 'usage' function and takes in a string that holds the title of the program
 	print('Usage: py ' + script_name + ' (-l) <port number>') # Prints 'Usage: py messenger.py (-l) <port number>'
 
 # Runs program as a server
-def server (port):
-	print("SERVER")
-	serversocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-	serversocket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-	serversocket.bind(('', port))
+def server (port): # Creates 'server' function and takes in 'port' that holds the port number to connect to
+	serversocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM) # Initializes 'serversocket' with a socket
+	serversocket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1) # 
+	serversocket.bind(('', port)) # Binds 'serversocket' to 'port'
+	serversocket.listen(5) # 
+	sock, addr = serversocket.accept() # Accept the connection and store it in 'sock' and 'addr'
+	serversocket.close() # Close the socket as it is no longer needed
+
+	msg_bytes= sock.recv(1024)	
+	print ('client said: ' + msg_bytes.decode())
+	sock.send(msg_bytes)
 
 # Runs program as a client
-def client (port):
-	print("CLIENT")
-	sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-	sock.connect(('localhost', port))
+def client (port): # Creates 'client' function and takes in 'port' that holds the port number to connect to
+	message = sys.stdin.readline().replace("\n", "") # Saves standard input to 'message' without the newline character
+	sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM) # Initializes 'sock' with a socket
+	sock.connect(('localhost', port)) # Connect to the server over 'port'
+	sendThread = send.Send(sock, message, 0) # Create thread to send messages
+	sendThread.start() # Start the thread
 
 # Reads command line arguments and determines if program should be run as a client or a server
 args = sys.argv # Stores the command line arguments array in to array 'args'
