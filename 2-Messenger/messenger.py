@@ -14,15 +14,12 @@ portNum = 0 # Initializes the port number, 'portNum' to be 0
 args = sys.argv # Stores the command line arguments array in to array 'args'
 numArgs = len(args) # Store the number of command line arguments in 'numArgs'
 if numArgs == 2: # Checks if there are exactly 2 command line arguments
-	if isinstance(args[1], int): # Checks if the 1st command line argument is an integer
 		isServer = False # Sets 'isServer' to be false, since the listen option (-l) was not selected
 		portNum = args[1] # Sets 'portNum' to be the 1st argument
 elif numArgs == 3: # Checks if there are exactly 3 command line arguments
-	if args[1] == '-l' & isinstance(args[2], int): # Checks if the 1st command line argument is the listen option (-l) 
-												   # and if the 2nd command line argument is an integer
 		isServer = True # Sets 'isServer' to be true
 		portNum = args[2] # Sets 'portNum' to be the 2nd argument
-else: # If there are not 2 or 3 command line arguments
+else: # If there are not exactly 2 or 3 command line arguments
 	usage(args[0]) # Call 'usage' and pass the 0th command line argument, the name of the program
 	sys.exit() # Call 'sys.exit()' to close the program
 
