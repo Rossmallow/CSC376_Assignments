@@ -20,6 +20,7 @@ class Receive (threading.Thread): # Create class 'Send' that implements the 'thr
 #			print (self.talkingTo + ' said: ' + msg_bytes.decode())
 			print (msg_bytes.decode())
 			msg_bytes = self.sock.recv(1024)
+		self.sock.shutdown(socket.SHUT_WR)
 		self.sock.close() # Closes the socket
 
 	def wait_for_it(self, wait_time): #

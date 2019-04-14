@@ -17,9 +17,10 @@ class Send (threading.Thread): # Create class 'Send' that implements the 'thread
 		self.wait_for_it(self.delay) #
 		while self.message: # Loop while 'message' has a value
 			self.sock.send(self.message.encode()) # Encodes and sends 'message'
-			self.wait_for_it(2) # Calls 'wait_for_it' with a value of '2'
+#			self.wait_for_it(2) # Calls 'wait_for_it' with a value of '2'
 			self.message = sys.stdin.readline().replace("\n", "") # Saves standard input to 'message' without the newline character
-		self.sock.send("The other party has left".encode())
+#		self.sock.send("The other party has left".encode())
+		self.sock.shutdown(socket.SHUT_WR)
 		self.sock.close() # Closes the socket
 
 	def wait_for_it(self, wait_time): #
