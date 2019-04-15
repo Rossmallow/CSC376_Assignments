@@ -2,6 +2,7 @@
 # April 23rd 2019
 # messenger.py
 
+# Import modules
 import sys # Import sys module
 import socket # Import socket module
 import send, receive # Import custom send module located in send.py
@@ -14,8 +15,8 @@ def usage (script_name): # Creates 'usage' function and takes in a string that h
 def server (port): # Creates 'server' function and takes in 'port' that holds the port number to connect to
 	serversocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM) # Initializes 'serversocket' with a socket
 	serversocket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1) # 
-	serversocket.bind(('', port)) # 
-	serversocket.listen(5) # 
+	serversocket.bind(('', port)) # Binds 'serversocket' to 'port'
+	serversocket.listen(5) # Listens for socket connections with a backlog value of '5'
 	sock, addr = serversocket.accept() # Accept the connection and store it in 'sock' and 'addr'
 	serversocket.close() # Close the socket as it is no longer needednd
 	receiveThread = receive.Receive(sock) # Create thread to receive messages
