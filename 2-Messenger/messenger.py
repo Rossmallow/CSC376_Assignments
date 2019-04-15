@@ -14,25 +14,25 @@ def usage (script_name): # Creates 'usage' function and takes in a string that h
 def server (port): # Creates 'server' function and takes in 'port' that holds the port number to connect to
 	serversocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM) # Initializes 'serversocket' with a socket
 	serversocket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1) # 
-	serversocket.bind(('', port)) # Binds 'serversocket' to 'port'
+	serversocket.bind(('', port)) # 
 	serversocket.listen(5) # 
 	sock, addr = serversocket.accept() # Accept the connection and store it in 'sock' and 'addr'
 	serversocket.close() # Close the socket as it is no longer needednd
-	receiveThread = receive.Receive(sock, "Client", 0)
-	receiveThread.start()
-	message = sys.stdin.readline().replace("\n", "")
-	sendThread = send.Send(sock, message, 0)
-	sendThread.start()
+	receiveThread = receive.Receive(sock) # Create thread to receive messages
+	receiveThread.start() # Start thread to receive messages
+	message = sys.stdin.readline().replace("\n", "") # Saves standard input to 'message' without the newline character
+	sendThread = send.Send(sock, message) # Create thread to send messages
+	sendThread.start() # Start thread to send messages
 
 # Runs program as a client
 def client (port): # Creates 'client' function and takes in 'port' that holds the port number to connect to
 	sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM) # Initializes 'sock' with a socket
 	sock.connect(('localhost', port)) # Connect to the server over 'port'
-	receiveThread = receive.Receive(sock, "Server", 0)
-	receiveThread.start()
+	receiveThread = receive.Receive(sock) # Create thread to receive messages
+	receiveThread.start() # Start thread to receive messages
 	message = sys.stdin.readline().replace("\n", "") # Saves standard input to 'message' without the newline character
-	sendThread = send.Send(sock, message, 0) # Create thread to send messages
-	sendThread.start() # Start the thread
+	sendThread = send.Send(sock, message) # Create thread to send messages
+	sendThread.start() # Start thread to send messages
 
 # Reads command line arguments and determines if program should be run as a client or a server
 args = sys.argv # Stores the command line arguments array in to array 'args'
