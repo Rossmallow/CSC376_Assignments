@@ -5,7 +5,7 @@
 # Import modules
 import sys # Import sys module
 import socket # Import socket module
-import send, receive # Import custom send module located in send.py
+import send, receive # Import custom send and receive modules
 
 # Displays how to open the program
 def usage (script_name): # Creates 'usage' function and takes in a string that holds the title of the program
@@ -14,7 +14,7 @@ def usage (script_name): # Creates 'usage' function and takes in a string that h
 # Runs program as a server
 def server (port): # Creates 'server' function and takes in 'port' that holds the port number to connect to
 	serversocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM) # Initializes 'serversocket' with a socket
-	serversocket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1) # 
+	serversocket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1) # Allows multiple sockets on the same port
 	serversocket.bind(('', port)) # Binds 'serversocket' to 'port'
 	serversocket.listen(5) # Listens for socket connections with a backlog value of '5'
 	sock, addr = serversocket.accept() # Accept the connection and store it in 'sock' and 'addr'
