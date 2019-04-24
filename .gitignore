@@ -10,9 +10,9 @@
 !2-Messenger/receive.py
 !3-Chat/
 3-Chat/*
-!3-Chat/ChatServer.py
+
 !3-Chat/ChatClient.py
-!3-Chat/serverSend.py
-!3-Chat/serverReceive.py
+
+
 !3-Chat/clientSend.py
 !3-Chat/clientReceive.py
