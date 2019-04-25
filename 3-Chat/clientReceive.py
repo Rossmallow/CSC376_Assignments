@@ -1,4 +1,4 @@
-# Ross Nelson CSC376 Assignment 2: Messenger
+# Ross Nelson CSC376 Assignment 3: Chat
 # May 7th, 2019
 # clientReceive.py
 
