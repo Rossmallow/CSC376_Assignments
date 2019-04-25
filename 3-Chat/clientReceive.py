@@ -1,5 +1,5 @@
 # Ross Nelson CSC376 Assignment 2: Messenger
-# May 7th 2019
+# May 7th, 2019
 # clientReceive.py
 
 # Import modules
