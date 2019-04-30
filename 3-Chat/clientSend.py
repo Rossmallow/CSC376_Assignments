@@ -4,7 +4,7 @@
 
 # Import modules
 import sys, os # Import sys and os modules
-import threading, time # Import threading and time modules
+import threading # Import threading module
 import socket # Import socket module
 
 # Send class implements 'threading.Thread' class to send messages while running in a separate thread

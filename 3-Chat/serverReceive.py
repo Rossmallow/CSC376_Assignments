@@ -4,7 +4,7 @@
 
 # Import modules
 import os # Import os module
-import threading, time  # Import threading and time modules
+import threading # Import threading module
 import socket # Import socket module
 
 # Create and initialize global variable 'clients'
