@@ -4,8 +4,10 @@
 
 # Import modules
 import os # Import os module
-import threading, time  # Import threading and time modules
+import threading # Import threading module
 import socket # Import socket module
+
+global filePort
 
 # Receive class implements 'threading.Thread' class to receive messages while running in a separate thread
 class Receive (threading.Thread): # Creates 'Receive' class that implements the 'threading.Thread' class
@@ -15,8 +17,12 @@ class Receive (threading.Thread): # Creates 'Receive' class that implements the 
 		
 	# Receives messages until there are no more messages, then exit the process
 	def run(self): # Creates 'run' function which takes argument 'self' and is called in the implemented 'start' function
-		msg_bytes = self.sock.recv(1024) # Receive a message up to 1024 bytes and save bytes to 'msg_bytes'
+		filePort = int(self.sock.recv(1024).decode()) # Receive a message up to 1024 bytes that contains the port number to send files to, decode it, then convert it to an integer, and finally store in 'filePort'
 		while True: # Loop until standard input is closed
-			print (msg_bytes.decode()) # Decode the message and print to standard output as a string
 			msg_bytes = self.sock.recv(1024) # Receive a message up to 1024 bytes and save bytes to 'msg_bytes'
+			message = msg_bytes.decode() # Decode the message and store in 'message'
+			if message[0] == "m":
+				print(message[1:])
+			elif message[0] == "f":
+				print("Requesting File: " + message[1:] + " over port: " + str(filePort))
 		os._exit(0) # Exit the process
