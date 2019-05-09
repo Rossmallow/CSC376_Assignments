@@ -25,8 +25,7 @@ while i < numArgs: # Iterate through each of the arguments
 
 # Determines which function to run depending on the state of 'isServer'
 if (isServer): # Checks if 'isServer' is set to 'True'
-	print("server")
-	server.run(listenPort) # Calls the 'run' function from the server module and passes 'listenPort'
+	server.Server(listenPort) # Calls the 'run' function from the server module and passes 'listenPort'
 else: # If 'isServer' is not 'True' i.e. 'False'
 	print("client")
-	client.run(listenPort, serverPort, serverAddress) # Calls the 'run' function from the client module and passes 'listenPort', 'serverPort', and 'serverAddress'
+	client.Client(listenPort, serverPort, serverAddress) # Calls the 'run' function from the client module and passes 'listenPort', 'serverPort', and 'serverAddress'
