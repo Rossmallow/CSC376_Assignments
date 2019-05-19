@@ -6,16 +6,29 @@
 import sys # Import sys module
 import socket # Import socket module
 import receive # Import custom receive module
+import os
 
-def fileServer(port):
+def receive_file(sock, filename):
+	file = open(filename, 'wb')
+	while True:
+		file_bytes = sock.recv(1024)
+		if file_bytes:
+			file.write(file_bytes)
+		else:
+			break
+	file.close()
+
+def fileServer(port, filename, mainSock):
 	print ("Starting server on " + str(port))
 	serversocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM) # Initializes 'serversocket' with a socket
 	serversocket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1) # Allows multiple sockets on the same port
 	serversocket.bind(('', port)) # Binds 'serversocket' to 'port'
 	serversocket.listen(5) # Listens for socket connections with a backlog value of '5'
+	mainSock.send(filename.encode()) # Encodes and sends 'fileName' over 'sock'
 	sock, addr = serversocket.accept() # Accept the connection and store it in 'sock' and 'addr'
 	serversocket.close() # Close the socket as it is no longer needed
-	# RECEIVE FILES
+	receive_file(sock, filename[1:])
+	sock.close()
 
 # Runs program
 def run (sock, port): # Creates 'run' function that takes in socket 'sock' and that asks users to select from a list of options until the program is closed
@@ -29,10 +42,9 @@ def run (sock, port): # Creates 'run' function that takes in socket 'sock' and t
 	elif option == "F": # Otherwise, if 'option' is equal to "F"
 		print("Which file do you want?") # Prints "Which file do you want?"
 		filename = "f" + sys.stdin.readline().replace("\n", "") # Saves standard input to 'filename' without the newline character and an additional "f" at the beginning to denote a file name
-		sock.send(filename.encode()) # Encodes and sends 'fileName' over 'sock'
-		fileServer(port)
+		fileServer(port, filename, sock)
 	elif option == "X": # Otherwise, if 'option' is equal to "X"
-		sys.exit() # Call 'sys.exit()' to end the thread
+		os._exit(0)
 	else: # Otherwise
 		print (option + " is not valid.") # Print what is stored in 'option' followed by " is not valid."
 	run(sock, port) # Calls 'run' function and passes in 'sock'
