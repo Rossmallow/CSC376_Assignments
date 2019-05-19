@@ -8,8 +8,8 @@ import threading # Import threading module
 import socket # Import socket module
 import struct
 
-global hasPort
-hasPort = False
+#global hasPort
+#hasPort = False
 
 # Receive class implements 'threading.Thread' class to receive messages while running in a separate thread
 class Receive (threading.Thread): # Creates 'Receive' class that implements the 'threading.Thread' class
@@ -61,8 +61,8 @@ class Receive (threading.Thread): # Creates 'Receive' class that implements the 
 	def run(self): # Creates 'run' function which takes argument 'self' and is called in the implemented 'start' function
 		global filePort
 		filePort = int(self.sock.recv(1024).decode()) # Receive a message up to 1024 bytes that contains the port number to send files to, decode it, then convert it to an integer, and finally store in 'filePort'
-		global hasPort
-		hasPort = True
+#		global hasPort
+#		hasPort = True
 		while True: # Loop until standard input is closed
 			msg_bytes = self.sock.recv(1024) # Receive a message up to 1024 bytes and save bytes to 'msg_bytes'
 			message = msg_bytes.decode() # Decode the message and store in 'message'

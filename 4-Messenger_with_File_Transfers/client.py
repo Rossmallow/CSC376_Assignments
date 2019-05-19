@@ -7,11 +7,13 @@ import sys # Import sys module
 import socket # Import socket module
 import receive # Import custom receive module
 import os
+import struct
 
 def receive_file(sock, filename):
 	file = open(filename, 'wb')
 	while True:
 		file_bytes = sock.recv(1024)
+#		decodedFile = file_bytes.decode()
 		if file_bytes:
 			file.write(file_bytes)
 		else:
@@ -27,7 +29,15 @@ def fileServer(port, filename, mainSock):
 	mainSock.send(filename.encode()) # Encodes and sends 'fileName' over 'sock'
 	sock, addr = serversocket.accept() # Accept the connection and store it in 'sock' and 'addr'
 	serversocket.close() # Close the socket as it is no longer needed
-	receive_file(sock, filename[1:])
+	file_size_bytes= sock.recv( 4 )
+	if file_size_bytes:
+		file_size= struct.unpack( '!L', file_size_bytes[:4] )[0]
+		if file_size:
+			receive_file(sock, filename[1:])
+		else:
+			print('File does not exist or is empty')
+	else:
+		print('File does not exist or is empty')
 	sock.close()
 
 # Runs program
@@ -56,7 +66,7 @@ def Client (listenPort, serverPort, serverAddress): # Creates 'Client' function 
 	receiveThread = receive.Receive(sock) # Create thread to receive messages
 	receiveThread.start() # Start thread to receive messages
 	sock.send(str(listenPort).encode())
-	while (receive.hasPort == False):
-		i = 1
+#	while (receive.hasPort == False):
+#		i = 1
 	receive.filePort = listenPort
 	run(sock, listenPort) # Calls 'run' function
