@@ -13,7 +13,6 @@ def receive_file(sock, filename):
 	file = open(filename, 'wb')
 	while True:
 		file_bytes = sock.recv(1024)
-#		decodedFile = file_bytes.decode()
 		if file_bytes:
 			file.write(file_bytes)
 		else:
@@ -66,7 +65,7 @@ def Client (listenPort, serverPort, serverAddress): # Creates 'Client' function 
 	receiveThread = receive.Receive(sock) # Create thread to receive messages
 	receiveThread.start() # Start thread to receive messages
 	sock.send(str(listenPort).encode())
-#	while (receive.hasPort == False):
-#		i = 1
+	while (receive.hasPort == False):
+		i = 1
 	receive.filePort = listenPort
 	run(sock, listenPort) # Calls 'run' function

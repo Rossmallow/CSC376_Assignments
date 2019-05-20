@@ -8,12 +8,12 @@ import socket # Import socket module
 import receive # Import custom receive module
 import os
 import struct
+import time
 
 def receive_file(sock, filename):
 	file = open(filename, 'wb')
 	while True:
 		file_bytes = sock.recv(1024)
-#		decodedFile = file_bytes.decode()
 		if file_bytes:
 			file.write(file_bytes)
 		else:
@@ -69,7 +69,7 @@ def Server (port): # Creates 'Server' function and takes in 'port' that holds th
 	serversocket.close() # Close the socket as it is no longer needed
 	receiveThread = receive.Receive(sock) # Create thread to receive messages
 	receiveThread.start() # Start thread to receive messages
-#	while (receive.hasPort == False):
-#		i = 1
+	while (receive.hasPort == False): # WAITING
+		i = 1
 	sock.send(str(receive.filePort).encode())
 	run(sock, receive.filePort) # Call 'run' function and passes in 'sock' and the global value, 'filePort' from 'receive'
