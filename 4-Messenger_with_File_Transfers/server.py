@@ -8,7 +8,6 @@ import socket # Import socket module
 import receive # Import custom receive module
 import os
 import struct
-import time
 
 def receive_file(sock, filename):
 	file = open(filename, 'wb')
