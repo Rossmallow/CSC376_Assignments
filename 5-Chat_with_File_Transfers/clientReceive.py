@@ -6,13 +6,14 @@
 import os # Import os module
 import threading  # Import threading module
 import socket # Import socket module
+import struct
 
 # Receive class implements 'threading.Thread' class to receive messages while running in a separate thread
 class Receive (threading.Thread): # Creates 'Receive' class that implements the 'threading.Thread' class
-	def __init__(self, sock, filePort): # Create '__init__' function with arguments 'self' and 'sock'
+	def __init__(self, sock, listenPort): # Create '__init__' function with arguments 'self' and 'sock'
 		threading.Thread.__init__(self) # Calls the threading.Thread constructor passing 'self'
 		self.sock = sock # Store 'sock' in the member variable, 'sock'
-		self.filePort = filePort
+		self.listenPort = listenPort
 		
 	def send_file(self, sock, fileSize, file):
 		print('File size is ' + str(fileSize))
@@ -61,7 +62,7 @@ class Receive (threading.Thread): # Creates 'Receive' class that implements the 
 			if len(message) > 0:
 				if message[0] == "m":
 					print(message[1:])
-				elif messages[0] == "f":
-					filename = messages[1:]
-					self.checkFile(sock, self.filePort, filename)
+				elif message[0] == "f":
+					filename = message[1:]
+					self.checkFile(self.sock, self.listenPort, filename)
 		os._exit(0) # Exit the process

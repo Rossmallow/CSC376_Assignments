@@ -21,4 +21,3 @@ serversocket.listen(5) # Listens for socket connections with a backlog value of 
 while (True): # Loop forever
 	sock, addr = serversocket.accept() # Accepts connection and stores socket in 'sock' and 'addr'
 	serverReceive.Receive(sock).start() # Creates new thread by calling 'Receive' in 'serverReceive.py' and passes 'sock' to receive from, then starts the thread
-	serverReceive.sockets.append(sock) # Appends 'sock' to the end of gloabl array 'serverReceive.sockets'

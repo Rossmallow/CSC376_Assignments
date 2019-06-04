@@ -8,6 +8,7 @@ import socket # Import socket module
 import clientReceive # Import custom clientReceive module
 import time
 import os
+import struct
 
 def receive_file(sock, filename):
 	file = open(filename, 'wb')
@@ -54,7 +55,6 @@ def run (sock, port): # Creates 'run' function that takes in socket 'sock' and t
 		sock.send(ownername.encode())
 		print("Which file do you want?") # Prints "Which file do you want?"
 		filename = sys.stdin.readline().replace("\n", "") # Saves standard input to 'filename' without the newline character and an additional "f" at the beginning to denote a file name
-		sock.send(filename.encode())
 		fileServer(port, filename, sock)
 	elif option == "X": # Otherwise, if 'option' is equal to "X"
 		sock.send("eXit".encode())
