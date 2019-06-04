@@ -18,17 +18,18 @@ class Receive (threading.Thread): # Creates 'Receive' class that implements the 
 		self.sock = sock # Store 'sock' in the member variable, 'sock'
 		self.client = {'Name': '', 'Port': 0, 'Socket': None}
 
-	def receive_file(self, ownerSock, filename):
+	def receive_file(self, ownerSock, filename, fileSize):
 		##SEND BYTES TO REQUESTER
 		sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM) # Initializes 'sock' with a socket
 		sock.connect(('localhost', self.client['Port'])) # Connect to the server over 'port'
+		file_size_bytes = struct.pack('!L', fileSize)
+		sock.send(file_size_bytes)
 		while True:
 			file_bytes = ownerSock.recv(1024)
 			if file_bytes:
 				sock.send(file_bytes)
 			else:
 				break
-		file.close()
 
 	def sendZeroBytes(self):
 		zero_bytes = struct.pack('!L', 0)
@@ -49,7 +50,7 @@ class Receive (threading.Thread): # Creates 'Receive' class that implements the 
 		if file_size_bytes:
 			file_size = struct.unpack( '!L', file_size_bytes[:4] )[0]
 			if file_size:
-				self.receive_file(sock, filename[1:])
+				self.receive_file(sock, filename, file_size)
 			else:
 				print('File does not exist or is empty')
 				self.sendZeroBytes()
