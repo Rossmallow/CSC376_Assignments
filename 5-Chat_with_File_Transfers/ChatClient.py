@@ -33,7 +33,7 @@ def fileServer(port, filename, mainSock):
 	if file_size_bytes:
 		file_size = struct.unpack( '!L', file_size_bytes[:4] )[0]
 		if file_size:
-			receive_file(sock, filename[1:])
+			receive_file(sock, filename)
 		else:
 			print('File does not exist or is empty')
 	else:
