@@ -26,8 +26,8 @@ class Receive (threading.Thread): # Creates 'Receive' class that implements the 
 			else:
 				break
 		file.close()
-		sock.shutdown(socket.SHUT_WR)
 		sock.close()
+		return
 
 	def fileClient(self, sock, port, fileSize, file):
 		sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM) # Initializes 'sock' with a socket
@@ -35,6 +35,7 @@ class Receive (threading.Thread): # Creates 'Receive' class that implements the 
 		sock.connect(("localhost", port)) # Connect to the server with address 'serverAddress' over port number 'serverPort'
 		self.send_file(sock, fileSize, file)
 		sock.close()
+		return
 
 	def no_file(self, sock, port):
 		print ("no file")
@@ -45,6 +46,7 @@ class Receive (threading.Thread): # Creates 'Receive' class that implements the 
 		sock.send(zero_bytes)
 		sock.shutdown(socket.SHUT_WR)
 		sock.close()
+		return
 
 	def checkFile(self, sock, filePort, filename): 
 		print(filename)

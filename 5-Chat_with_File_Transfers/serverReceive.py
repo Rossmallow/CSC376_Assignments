@@ -19,22 +19,23 @@ class Receive (threading.Thread): # Creates 'Receive' class that implements the 
 		self.client = {'Name': '', 'Port': 0, 'Socket': None}
 
 	def receive_file(self, ownerSock, filename, fileSize):
+		print ("Receiving and Sending Files")
 		##SEND BYTES TO REQUESTER
 		sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM) # Initializes 'sock' with a socket
 		sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1) # Allows multiple sockets on the same port
 		sock.connect(('localhost', self.client['Port'])) # Connect to the server over 'port'
 		file_size_bytes = struct.pack('!L', fileSize)
 		sock.send(file_size_bytes)
-		while True:
-			file_bytes = ownerSock.recv(1024)
+		file_bytes = ownerSock.recv(1024)
+		while file_bytes:
 			if file_bytes:
 				sock.send(file_bytes)
-			else:
-				break
-		sock.shutdown(socket.SHUT_WR)
+			file_bytes = ownerSock.recv(1024)
 		sock.close()
+		return
 
 	def sendZeroBytes(self):
+		print ("Sending Zero Bytes")
 		zero_bytes = struct.pack('!L', 0)
 		sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM) # Initializes 'sock' with a socket
 		sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1) # Allows multiple sockets on the same port
@@ -42,17 +43,21 @@ class Receive (threading.Thread): # Creates 'Receive' class that implements the 
 		sock.send(zero_bytes)
 		sock.shutdown(socket.SHUT_WR)
 		sock.close()
+		return
 
 	def fileServer(self, port, filename, mainSock):
 		print ("Starting server on " + str(port))
 		serversocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM) # Initializes 'serversocket' with a socket
 		serversocket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1) # Allows multiple sockets on the same port
+		print ("Binding")
 		serversocket.bind(('', port)) # Binds 'serversocket' to 'port'
+		print ("Binded")
 		serversocket.listen(5) # Listens for socket connections with a backlog value of '5'
 		mainSock.send(("f" + filename).encode()) # Encodes and sends 'fileName' over 'sock'
 		sock, addr = serversocket.accept() # Accept the connection and store it in 'sock' and 'addr'
 		serversocket.shutdown(socket.SHUT_WR)
 		serversocket.close() # Close the socket as it is no longer needed
+		print("connected")
 		file_size_bytes= sock.recv( 4 )
 		if file_size_bytes:
 			file_size = struct.unpack( '!L', file_size_bytes[:4] )[0]
@@ -64,8 +69,8 @@ class Receive (threading.Thread): # Creates 'Receive' class that implements the 
 		else:
 			print('File does not exist or is empty')
 			self.sendZeroBytes()
-		sock.shutdown(socket.SHUT_WR)
-		sock.close()	
+		sock.close()
+		return	
 
 	# Receives messages until there are no more messages, then exit the process
 	def run(self): # Creates 'run' function which takes argument 'self' and is called in the implemented 'start' function
@@ -79,13 +84,16 @@ class Receive (threading.Thread): # Creates 'Receive' class that implements the 
 			if len(message) > 0:
 				if message[0] == "m":
 					message = name + ": " + message[1:]
+					print(message)
 					for client in clients: # For each 'socket' in global variable 'sockets'
 						if client['Socket'] != self.sock: # If 'socket' is not the same socket as 'self.sock'
 							client['Socket'].send(("m" + message).encode()) # Encode 'message' and send to 'socket'
 				elif message[0] == "f":
 					ownername = message[1:]
 					filename = self.sock.recv(1024).decode()
+					print ("Owner Name: " + ownername)
 					for client in clients:
+						print ("Client Name: " + client['Name'])
 						if client['Name'] == ownername:
 							ownerPort = client['Port']
 							ownerSocket = client['Socket']
