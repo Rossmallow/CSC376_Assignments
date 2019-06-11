@@ -27,6 +27,7 @@ def fileServer(port, filename, mainSock):
 	serversocket.listen(5) # Listens for socket connections with a backlog value of '5'
 	mainSock.send(filename.encode()) # Encodes and sends 'fileName' over 'sock'
 	sock, addr = serversocket.accept() # Accept the connection and store it in 'sock' and 'addr'
+	serversocket.shutdown(socket.SHUT_WR)
 	serversocket.close() # Close the socket as it is no longer needed
 	file_size_bytes= sock.recv( 4 )
 	if file_size_bytes:

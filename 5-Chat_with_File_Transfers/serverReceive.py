@@ -21,6 +21,7 @@ class Receive (threading.Thread): # Creates 'Receive' class that implements the 
 	def receive_file(self, ownerSock, filename, fileSize):
 		##SEND BYTES TO REQUESTER
 		sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM) # Initializes 'sock' with a socket
+		sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1) # Allows multiple sockets on the same port
 		sock.connect(('localhost', self.client['Port'])) # Connect to the server over 'port'
 		file_size_bytes = struct.pack('!L', fileSize)
 		sock.send(file_size_bytes)
@@ -30,12 +31,17 @@ class Receive (threading.Thread): # Creates 'Receive' class that implements the 
 				sock.send(file_bytes)
 			else:
 				break
+		sock.shutdown(socket.SHUT_WR)
+		sock.close()
 
 	def sendZeroBytes(self):
 		zero_bytes = struct.pack('!L', 0)
 		sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM) # Initializes 'sock' with a socket
+		sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1) # Allows multiple sockets on the same port
 		sock.connect(('localhost', self.client['Port'])) # Connect to the server over 'port'
 		sock.send(zero_bytes)
+		sock.shutdown(socket.SHUT_WR)
+		sock.close()
 
 	def fileServer(self, port, filename, mainSock):
 		print ("Starting server on " + str(port))
@@ -45,6 +51,7 @@ class Receive (threading.Thread): # Creates 'Receive' class that implements the 
 		serversocket.listen(5) # Listens for socket connections with a backlog value of '5'
 		mainSock.send(("f" + filename).encode()) # Encodes and sends 'fileName' over 'sock'
 		sock, addr = serversocket.accept() # Accept the connection and store it in 'sock' and 'addr'
+		serversocket.shutdown(socket.SHUT_WR)
 		serversocket.close() # Close the socket as it is no longer needed
 		file_size_bytes= sock.recv( 4 )
 		if file_size_bytes:
@@ -57,6 +64,7 @@ class Receive (threading.Thread): # Creates 'Receive' class that implements the 
 		else:
 			print('File does not exist or is empty')
 			self.sendZeroBytes()
+		sock.shutdown(socket.SHUT_WR)
 		sock.close()	
 
 	# Receives messages until there are no more messages, then exit the process
@@ -85,5 +93,5 @@ class Receive (threading.Thread): # Creates 'Receive' class that implements the 
 							##START SERVER ON OWNER PORT
 							self.fileServer(ownerPort, filename, ownerSocket)
 				elif message == "eXit":
+					self.client["Socket"].close
 					clients.remove(self.client)
-					sys.exit() # Exit

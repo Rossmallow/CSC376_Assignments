@@ -26,18 +26,21 @@ class Receive (threading.Thread): # Creates 'Receive' class that implements the 
 			else:
 				break
 		file.close()
+		sock.shutdown(socket.SHUT_WR)
+		sock.close()
 
 	def fileClient(self, sock, port, fileSize, file):
 		sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM) # Initializes 'sock' with a socket
+		sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1) # Allows multiple sockets on the same port
 		sock.connect(("localhost", port)) # Connect to the server with address 'serverAddress' over port number 'serverPort'
 		self.send_file(sock, fileSize, file)
-		sock.shutdown(socket.SHUT_WR)
 		sock.close()
 
 	def no_file(self, sock, port):
 		print ("no file")
 		zero_bytes = struct.pack('!L', 0)
 		sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM) # Initializes 'sock' with a socket
+		sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1) # Allows multiple sockets on the same port
 		sock.connect(("localhost", port))
 		sock.send(zero_bytes)
 		sock.shutdown(socket.SHUT_WR)
